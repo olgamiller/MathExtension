@@ -23,8 +23,9 @@ namespace MathExtension
     {
         private SortedDictionary<uint, double> _Items;
 
-        public static readonly Polynomial Zero = new Polynomial();
-        public uint HighestExponent => _Items.Last<KeyValuePair<uint, double>>().Key;
+        public uint HighestExponent => _Items.Count == 0 ? 0 : _Items.Last<KeyValuePair<uint, double>>().Key;
+
+        public static Polynomial Zero() => new Polynomial();
 
         public Polynomial()
         {
@@ -139,23 +140,25 @@ namespace MathExtension
             if (p2._Items.Count == 0)
                 throw new DivideByZeroException();
 
-            if (p1._Items.Count == 0)
-                return (Polynomial.Zero, Polynomial.Zero);
+            Polynomial quotient = Zero();
+            Polynomial remainder = (Polynomial)p1.MemberwiseClone();
+            KeyValuePair<uint, double> p2Last = p2._Items.Last();
 
-            KeyValuePair<uint, double> p1Last = p1._Items.Last<KeyValuePair<uint, double>>();
-            KeyValuePair<uint, double> p2Last = p2._Items.Last<KeyValuePair<uint, double>>();
+            do
+            {
+                if (remainder._Items.Count == 0)
+                    return (quotient, remainder);
 
-            if (p1Last.Key < p2Last.Key)
-                return (Polynomial.Zero, (Polynomial)p1.MemberwiseClone());
+                KeyValuePair<uint, double> p1Last = remainder._Items.Last();
 
-            Polynomial quotient = new Polynomial(p1Last.Key - p2Last.Key, p1Last.Value / p2Last.Value);
-            Polynomial remainder = p1 - p2 * quotient;
+                if (p1Last.Key < p2Last.Key)
+                    return (quotient, remainder);
 
-            Polynomial quotientNext;
-            (quotientNext, remainder) = Divide(remainder, p2); //TODO: iterative
-            quotient += quotientNext;
+                Polynomial quotientItem = new Polynomial(p1Last.Key - p2Last.Key, p1Last.Value / p2Last.Value);
+                quotient += quotientItem;
+                remainder -= p2 * quotientItem;
 
-            return (quotient, remainder);
+            } while (true);
         }
 
         public override string ToString()
