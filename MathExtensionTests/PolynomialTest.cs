@@ -175,6 +175,20 @@ namespace MathExtensionTests
         }
 
         [Theory]
+        [InlineData("0", 5, 0)]
+        [InlineData("5", -100, 5)]
+        [InlineData("-x", 5, -5)]
+        [InlineData("x^2", 5, 25)]
+        [InlineData("x^2 + 1", 5, 26)]
+        [InlineData("2*x^2 + x + 0.5", 3, 21.5)]
+        public void Test_GetY(string polynomial, double x, double expected)
+        {
+            Polynomial actualPolynomial = Polynomial.FromString(polynomial);
+            double actual = actualPolynomial.GetY(x);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
         [InlineData("-5", "-5")]
         [InlineData(" +57 ", "57")]
         [InlineData(" +53.75 ", "53.75")]

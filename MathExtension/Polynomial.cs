@@ -37,6 +37,11 @@ namespace MathExtension
             return result;
         }
 
+        public static Polynomial FromPolynomial(Polynomial polynomial)
+        {
+            return polynomial == null ? null : (Polynomial)polynomial.MemberwiseClone();
+        }
+
         public Polynomial()
         {
             _Items = new SortedDictionary<uint, double>();
@@ -170,6 +175,19 @@ namespace MathExtension
                 remainder -= p2 * quotientItem;
 
             } while (true);
+        }
+
+        public double GetY(double x)
+        {
+            double result = 0;
+
+            foreach (uint exponent in _Items.Keys)
+            {
+                double coefficent = _Items[exponent];
+                result += coefficent * Math.Pow(x, exponent);
+            }
+
+            return result;
         }
 
         public override string ToString()
