@@ -27,6 +27,16 @@ namespace MathExtension
 
         public static Polynomial Zero() => new Polynomial();
 
+        /// <summary>
+        /// <see cref="PolynomialParser"/> 
+        /// </summary>
+        /// <exception cref="PolynomialParser.ParserException"/>
+        public static Polynomial FromString(string polynomial)
+        {
+            Polynomial result = PolynomialParser.TryParse(polynomial);
+            return result;
+        }
+
         public Polynomial()
         {
             _Items = new SortedDictionary<uint, double>();
@@ -38,6 +48,7 @@ namespace MathExtension
             Merge(exponent, coefficient);
         }
 
+        public void Add((uint exponent, double coefficient) item) => Merge(item.exponent, item.coefficient);
         public void Add(uint exponent, double coefficient) => Merge(exponent, coefficient);
         public IEnumerator GetEnumerator() => (IEnumerator)_Items.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => (IEnumerator)GetEnumerator();

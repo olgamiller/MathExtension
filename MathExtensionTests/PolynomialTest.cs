@@ -173,5 +173,43 @@ namespace MathExtensionTests
             Assert.Equal("x^2+x+3", quotient.ToString());
             Assert.Equal("5", remainder.ToString());
         }
+
+        [Theory]
+        [InlineData("-5", "-5")]
+        [InlineData(" +57 ", "57")]
+        [InlineData(" +53.75 ", "53.75")]
+        [InlineData(".5 ", "0.5")]
+        [InlineData("5e3 ", "5000")]
+        [InlineData("5E+3 ", "5000")]
+        [InlineData("-5E-3 ", "-0.005")]
+
+        [InlineData("x", "x")]
+        [InlineData("-x", "-x")]
+        [InlineData("x^3", "x^3")]
+        [InlineData("-x^3", "-x^3")]
+
+        [InlineData("1*x", "x")]
+        [InlineData("2x", "2*x")]
+        [InlineData("2*x", "2*x")]
+        [InlineData("23.5x^3", "23.5*x^3")]
+        [InlineData("23.5*x^3", "23.5*x^3")]
+
+        [InlineData("-2*x^3+5", "-2*x^3+5")]
+        [InlineData("-5 + 2 x", "2*x-5")]
+        [InlineData("-5*x - 3x + 1345", "-8*x+1345")]
+        [InlineData("-5*x^34 + 13.45", "-5*x^34+13.45")]
+        [InlineData("-5*x^34", "-5*x^34")]
+        [InlineData("1*x^3+13.45x^2-.5", "x^3+13.45*x^2-0.5")]
+
+        [InlineData("0*x^3", "0")]
+        [InlineData("5+x", "x+5")]
+        [InlineData("x+x", "2*x")]
+        [InlineData("3*x+x", "4*x")]
+        public void Test_FromString(string input, string expected)
+        {
+            Polynomial actualPolynomial = Polynomial.FromString(input);
+            string actual = actualPolynomial.ToString();
+            Assert.Equal(expected, actual);
+        }
     }
 }
