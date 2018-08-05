@@ -20,7 +20,7 @@ namespace MathExtensionTests
     public class PolynomialTest
     {
         [Fact]
-        public void TestToString_Exponent0()
+        public void Test_ToString_Exponent0()
         {
             Polynomial p;
 
@@ -47,7 +47,7 @@ namespace MathExtensionTests
         }
 
         [Fact]
-        public void TestToString_Exponent1()
+        public void Test_ToString_Exponent1()
         {
             Polynomial p;
 
@@ -65,7 +65,7 @@ namespace MathExtensionTests
         }
 
         [Fact]
-        public void TestToString_Exponent2()
+        public void Test_ToString_Exponent2()
         {
             Polynomial p;
 
@@ -83,7 +83,7 @@ namespace MathExtensionTests
         }
 
         [Fact]
-        public void TestToString_ExponentCombined()
+        public void Test_ToString_ExponentCombined()
         {
             Polynomial p;
 
@@ -189,6 +189,34 @@ namespace MathExtensionTests
         }
 
         [Theory]
+        [InlineData("0", 0)]
+        [InlineData("5", 0)]
+        [InlineData("-x+1", 1)]
+        [InlineData("x^2", 2)]
+        [InlineData("x^3 + x^2", 3)]
+        public void Test_HighestExponent(string polynomial, uint expected)
+        {
+            Polynomial actualPolynomial = Polynomial.FromString(polynomial);
+            uint actual = actualPolynomial.HighestExponent;
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Test_FromPolynomial()
+        {
+            string expected = "5*x^2+x+1";
+            Polynomial polynomial = Polynomial.FromString(expected);
+            string actual = Polynomial.FromPolynomial(polynomial).ToString();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Test_FromPolynomial_Null()
+        {
+            Assert.Null(Polynomial.FromPolynomial(null));
+        }
+
+        [Theory]
         [InlineData("-5", "-5")]
         [InlineData(" +57 ", "57")]
         [InlineData(" +53.75 ", "53.75")]
@@ -219,11 +247,46 @@ namespace MathExtensionTests
         [InlineData("5+x", "x+5")]
         [InlineData("x+x", "2*x")]
         [InlineData("3*x+x", "4*x")]
+        [InlineData("3*x^+45", "3*x^45")]
         public void Test_FromString(string input, string expected)
         {
             Polynomial actualPolynomial = Polynomial.FromString(input);
             string actual = actualPolynomial.ToString();
             Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("52*-", "Syntax error at 3.")]
+        [InlineData("3*-4", "Syntax error at 2.")]
+        [InlineData("3*    x4", "Syntax error at 3.")]
+        [InlineData("x*4", "Syntax error at 1.")]
+        public void Test_FromString_SyntaxException(string input, string expectedError)
+        {
+            Exception ex = Assert.Throws<SyntaxException>(() => Polynomial.FromString(input));
+            Assert.Equal(expectedError, ex.Message);
+        }
+
+        [Theory]
+        [InlineData("-5^5", "Coefficient syntax error at 0.")]
+        [InlineData("--5", "Coefficient syntax error at 0.")]
+        [InlineData("*4", "Coefficient syntax error at 0.")]
+        [InlineData("4+*x", "Coefficient syntax error at 1.")]
+        [InlineData("*x", "Coefficient syntax error at 0.")]
+        public void Test_FromString_CoefficientSyntaxException(string input, string expectedError)
+        {
+            Exception ex = Assert.Throws<CoefficientSyntaxException>(() => Polynomial.FromString(input));
+            Assert.Equal(expectedError, ex.Message);
+        }
+
+        [Theory]
+        [InlineData("x^-5", "Exponent syntax error at 2.")]
+        [InlineData("3*x^*4", "Exponent syntax error at 4.")]
+        [InlineData("x^+m", "Exponent syntax error at 2.")]
+        [InlineData("x^4m", "Exponent syntax error at 2.")]
+        public void Test_FromString_ExponentSyntaxException(string input, string expectedError)
+        {
+            Exception ex = Assert.Throws<ExponentSyntaxException>(() => Polynomial.FromString(input));
+            Assert.Equal(expectedError, ex.Message);
         }
     }
 }

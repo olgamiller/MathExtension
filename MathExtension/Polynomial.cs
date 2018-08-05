@@ -23,14 +23,13 @@ namespace MathExtension
     {
         private SortedDictionary<uint, double> _Items;
 
-        public uint HighestExponent => _Items.Count == 0 ? 0 : _Items.Last<KeyValuePair<uint, double>>().Key;
-
-        public static Polynomial Zero() => new Polynomial();
+        public uint HighestExponent { get => _Items.Count == 0 ? 0 : _Items.Last<KeyValuePair<uint, double>>().Key; }
+        public static Polynomial Zero { get => new Polynomial(); }
 
         /// <summary>
         /// <see cref="PolynomialParser"/> 
         /// </summary>
-        /// <exception cref="PolynomialParser.ParserException"/>
+        /// <exception cref="SyntaxException"/>
         public static Polynomial FromString(string polynomial)
         {
             Polynomial result = PolynomialParser.TryParse(polynomial);
@@ -39,7 +38,7 @@ namespace MathExtension
 
         public static Polynomial FromPolynomial(Polynomial polynomial)
         {
-            return polynomial == null ? null : (Polynomial)polynomial.MemberwiseClone();
+            return (Polynomial)polynomial?.MemberwiseClone();
         }
 
         public Polynomial()
@@ -156,7 +155,7 @@ namespace MathExtension
             if (p2._Items.Count == 0)
                 throw new DivideByZeroException();
 
-            Polynomial quotient = Zero();
+            Polynomial quotient = Zero;
             Polynomial remainder = (Polynomial)p1.MemberwiseClone();
             KeyValuePair<uint, double> p2Last = p2._Items.Last();
 

@@ -14,16 +14,9 @@ using System;
 
 namespace MathExtension
 {
+
     public static class PolynomialParser
     {
-        public class ParserException : Exception
-        {
-            public ParserException(int position)
-                : base($"Error at {position}.")
-            {
-            }
-        }
-
         /// <summary>
         /// The following tokens are supported:
         ///     Variables: x
@@ -34,7 +27,7 @@ namespace MathExtension
         ///
         /// Example: 2.5x^3+x+1, or 2.5*x^3+x+1
         /// </summary>
-        /// <exception cref="ParserException"/>
+        /// <exception cref="SyntaxException"/>
         public static Polynomial TryParse(string polynomialString)
         {
             string s = PrepareString(polynomialString);
@@ -48,7 +41,7 @@ namespace MathExtension
                 if (s[pos] == '+' || s[pos] == '-')
                     polynomial.Add(TryParseItem(s, ref pos));
                 else
-                    throw new ParserException(pos);
+                    throw new SyntaxException(pos);
             }
 
             return polynomial;
@@ -68,11 +61,13 @@ namespace MathExtension
             (uint exponent, double coefficient) item = (0, 1.0);
 
             if (pos < s.Length && s[pos] != 'x')
-            {
                 item.coefficient = TryParseCoefficient(s, ref pos);
 
-                if (pos < s.Length && s[pos] == '*')
-                    pos++;
+            if (pos < s.Length && s[pos] == '*')
+            {
+                pos++;
+                if (pos >= s.Length || s[pos] != 'x')
+                    throw new SyntaxException(pos);
             }
 
             if (pos < s.Length && s[pos] == 'x')
@@ -119,7 +114,7 @@ namespace MathExtension
                             pos++;
                         break;
                     default:
-                        throw new ParserException(startPos);
+                        throw new CoefficientSyntaxException(startPos);
                 }
             }
         }
@@ -135,7 +130,7 @@ namespace MathExtension
             else if (coefficientString == "-" && (pos < s.Length && s[pos] == 'x'))
                 coefficient = -1;
             else if (!double.TryParse(coefficientString, out coefficient))
-                throw new ParserException(startPos);
+                throw new CoefficientSyntaxException(startPos);
 
             return coefficient;
         }
@@ -178,7 +173,7 @@ namespace MathExtension
                         pos++;
                         break;
                     default:
-                        throw new ParserException(startPos);
+                        throw new ExponentSyntaxException(startPos);
                 }
             }
         }
@@ -189,7 +184,7 @@ namespace MathExtension
             uint exponent;
 
             if (!uint.TryParse(exponentString, out exponent))
-                throw new ParserException(startPos);
+                throw new ExponentSyntaxException(startPos);
 
             return exponent;
         }
