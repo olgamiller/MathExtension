@@ -189,6 +189,21 @@ namespace MathExtensionTests
         }
 
         [Theory]
+        [InlineData("0", "0")]
+        [InlineData("11", "0")]
+        [InlineData("11x", "11")]
+        [InlineData("-11x+5", "-11")]
+        [InlineData("-x^2", "-2*x")]
+        [InlineData("3x^7", "21*x^6")]
+        [InlineData("x^3+5x", "3*x^2+5")]
+        public void Test_Derive(string polynomial, string expected)
+        {
+            Polynomial actualPolynomial = Polynomial.FromString(polynomial);
+            string actual = actualPolynomial.Derive().ToString();
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
         [InlineData("0", 0)]
         [InlineData("5", 0)]
         [InlineData("-x+1", 1)]

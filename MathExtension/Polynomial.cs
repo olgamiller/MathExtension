@@ -189,6 +189,22 @@ namespace MathExtension
             return result;
         }
 
+        public Polynomial Derive()
+        {
+            Polynomial polynomial = Zero;
+
+            foreach (uint exponent in _Items.Keys)
+            {
+                if (exponent != 0)
+                {
+                    double coefficent = _Items[exponent];
+                    polynomial.Merge(exponent - 1, coefficent * exponent);
+                }
+            }
+
+            return polynomial;
+        }
+
         public override string ToString()
         {
             if (_Items.Count <= 0)
