@@ -11,11 +11,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 using System;
+using MathExtension.Common;
 
-namespace MathExtension
+namespace MathExtension.Polynomial.Internal
 {
-
-    public static class PolynomialParser
+    internal static class PolynomialParser
     {
         /// <summary>
         /// The following tokens are supported:
