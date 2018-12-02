@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright 2018 Olga Miller <olga.rgb@gmail.com>
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,6 +43,13 @@ namespace MathExtension.Polynomial
         public static Polynomial FromPolynomial(Polynomial polynomial)
         {
             return (Polynomial)polynomial?.MemberwiseClone();
+        }
+
+        public static Polynomial Fit(double[,] data)
+        {
+            PolynomialRegression regression = new PolynomialRegression();
+            Polynomial polynomial = regression.Fit(data);
+            return polynomial;
         }
 
         public Polynomial()
