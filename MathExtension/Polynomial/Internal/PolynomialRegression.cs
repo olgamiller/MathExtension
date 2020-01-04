@@ -10,18 +10,41 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System;
+using MathExtension.LinearAlgebra;
 
 namespace MathExtension.Polynomial.Internal
 {
     internal class PolynomialRegression
     {
-        public Polynomial Fit(double[,] data)
+        public Polynomial Fit(double[] data)
         {
             Polynomial polynomial = new Polynomial();
+            Vector coeffs = GetCoeffs(data);
+
+            for (int i = 0; i < coeffs.Length; i++)
+            {
+                polynomial.Add((uint)i, coeffs[i]);
+            }
+
             return polynomial;
         }
 
-        //SolveSystemOfLinearEquations()
+        private Vector GetCoeffs(double[] data)
+        {
+            Polynomial polynomial = new Polynomial();
+            int length = data.Length / 2;
+            double[] x = new double[length];
+            double[] y = new double[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                x[i] = data[i * 2];
+                y[i] = data[i * 2 + 1];
+            }
+
+            VandermondeMatrix vm = new VandermondeMatrix(x);
+            Vector v = new Vector(y);
+            return vm.GetInverse() * v;
+        }
     }
 }

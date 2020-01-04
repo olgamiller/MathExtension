@@ -14,7 +14,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using MathExtension.Polynomial.Internal;
@@ -45,7 +44,7 @@ namespace MathExtension.Polynomial
             return (Polynomial)polynomial?.MemberwiseClone();
         }
 
-        public static Polynomial Fit(double[,] data)
+        public static Polynomial FromDataPoints(double[] data)
         {
             PolynomialRegression regression = new PolynomialRegression();
             Polynomial polynomial = regression.Fit(data);

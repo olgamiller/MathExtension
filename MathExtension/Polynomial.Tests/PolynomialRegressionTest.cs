@@ -10,9 +10,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-using System;
 using Xunit;
-using MathExtension.Polynomial;
 using MathExtension.Polynomial.Internal;
 
 namespace MathExtension.Polynomial.Tests
@@ -20,15 +18,13 @@ namespace MathExtension.Polynomial.Tests
     public class PolynomialRegressionTest
     {
         [Fact]
-        public void Test()
+        public void Test_PolynomialRegression()
         {
-            //double[,] data;
-
-            //data = new double[,] { { -2, 4 }, { -1, 1 }, { 0, 0 }, { 1, 1 }, { 2, 4 } };
-            //Assert.Equal("x^2", Execute(data));
+            double[] data = new double[] { -2, -39, 0, 3, 1, 6, 3, 36 };
+            Assert.Equal("2*x^3-4*x^2+5*x+3", Execute(data));
         }
 
-        private string Execute(double[,] data)
+        private string Execute(double[] data)
         {
             PolynomialRegression regression = new PolynomialRegression();
             Polynomial actualPolynomial = regression.Fit(data);
