@@ -13,7 +13,6 @@ limitations under the License.
 using System;
 using Xunit;
 using MathExtension.Common;
-using MathExtension.Polynomial;
 using MathExtension.Polynomial.Internal;
 
 namespace MathExtension.Polynomial.Tests
