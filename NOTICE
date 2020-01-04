@@ -1,4 +1,7 @@
 MathExtension
-Copyright 2018 Olga Miller <olga.rgb@gmail.com>
+Copyright 2020 Olga Miller <olga.rgb@gmail.com>
 
 Developed using Visual Studio Code on Linux with .NET Core and "C# for Visual Studio Code (powered by OmniSharp)" extension.
+
+The inverse of the Vandermonde matrix calculation based on the following paper: 
+https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19660023042.pdf
